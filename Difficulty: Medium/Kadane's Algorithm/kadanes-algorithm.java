@@ -44,10 +44,11 @@ class Solution {
     int maxSubarraySum(int[] arr) {
         int res= arr[0], maxEnding= arr[0];
         for(int i=1; i<arr.length; i++){
-            maxEnding= Math.max(arr[i],maxEnding+ arr[i]);
-            res= Math.max(res, maxEnding);
+            maxEnding= Math.max(arr[i], maxEnding+ arr[i]);
+            res= Math.max(maxEnding, res);
         }
         return res;
+        
 
         // Your code here
     }
