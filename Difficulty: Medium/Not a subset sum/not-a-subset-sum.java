@@ -25,6 +25,7 @@ public class Main {
 
 // } Driver Code Ends
 
+
 class Solution {
     public long findSmallest(int[] arr) {
         int res = 1;
