@@ -25,7 +25,6 @@ class Node{
 class Solution {
     // Function to count nodes of a linked list.
     public int getCount(Node head) {
-        // code here
         Node temp=head;
         int c=0;
         while(temp!=null){
