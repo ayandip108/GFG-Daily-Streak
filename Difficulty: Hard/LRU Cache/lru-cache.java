@@ -38,6 +38,8 @@ public class LRUDesign {
 // } Driver Code Ends
 
 
+// design the class in the most optimal way
+
 class Node{
     int key;
     int value;
