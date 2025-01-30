@@ -17,6 +17,16 @@ class GFG {
             if (ans.size() == 0)
                 System.out.println("-1");
             else {
+                ans.sort((list1, list2) -> {
+                    int size = Math.min(list1.size(), list2.size());
+                    for (int i = 0; i < size; i++) {
+                        if (!list1.get(i).equals(list2.get(i))) {
+                            return list1.get(i) - list2.get(i);
+                        }
+                    }
+                    return list1.size() - list2.size();
+                });
+
                 for (int i = 0; i < ans.size(); i++) {
                     System.out.print("[");
                     for (int j = 0; j < ans.get(i).size(); j++)
@@ -25,6 +35,8 @@ class GFG {
                 }
                 System.out.println();
             }
+
+            System.out.println("~");
         }
     }
 }
@@ -34,75 +46,58 @@ class GFG {
 // User function Template for Java
 
 class Solution {
-   public void func(ArrayList<ArrayList<Character>> board, ArrayList<ArrayList<ArrayList<Integer>>> ans, ArrayList<ArrayList<Integer>> temp, int idx) {
-        if (idx == board.size()) {
-            ans.add(new ArrayList<>(temp));
+    ArrayList<ArrayList<Integer>>list;
+    int[][] board;
+    public ArrayList<ArrayList<Integer>> nQueen(int n) {
+        // code here
+        list=new ArrayList<>();
+        board=new int[n][n];
+        solveNQueen(0,n);
+        return list;
+        
+    }
+    private boolean isSafe(int row,int col,int N){
+        for(int i=0;i<col;i++){
+            if(board[row][i]==1){
+                return false;
+            }
+        }
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 1) {
+                return false;
+            }
+        }
+
+        for (int i = row, j = col; i < N && j >= 0; i++, j--) {
+            if (board[i][j] == 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private void solveNQueen(int col,int N){
+        if(col>=N){
+            printSolution(N);
             return;
         }
-        for (int i = 0; i < board.size(); i++) {
-            boolean flagup = true;
-            boolean flagleft = true;
-            boolean flagright = true;
-            for (int row = 0; row < idx; row++) {
-                if (board.get(row).get(i) == 'Q') {
-                    flagup = false;
-                    break;
-                }
-            }
-            int row = idx - 1;
-            int col = i - 1;
-            while (row >= 0 && col >= 0) {
-                if (board.get(row).get(col) == 'Q') {
-                    flagleft = false;
-                    break;
-                }
-                row--;
-                col--;
-            }
-            row = idx - 1;
-            col = i + 1;
-            while (row >= 0 && col < board.size()) {
-                if (board.get(row).get(col) == 'Q') {
-                    flagright = false;
-                    break;
-                }
-                row--;
-                col++;
-            }
-            if (flagup && flagleft && flagright) {
-                board.get(idx).set(i, 'Q');
-                ArrayList<Integer> pos = new ArrayList<>();
-                pos.add(idx);  // row
-                pos.add(i);    // column
-                temp.add(pos);
-                func(board, ans, temp, idx + 1);
-                board.get(idx).set(i, '.');
-                temp.remove(temp.size() - 1);
+        for(int i=0;i<N;i++){
+            if(isSafe(i,col,N)){
+                board[i][col]=1;
+                solveNQueen(col+1,N);
+                board[i][col]=0;
             }
         }
     }
-    public ArrayList<ArrayList<Integer>> nQueen(int n) {
-        ArrayList<ArrayList<Character>> board = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            ArrayList<Character> temp = new ArrayList<>();
-            for (int j = 0; j < n; j++) {
-                temp.add('.');
+    private void printSolution(int N) {
+        ArrayList<Integer>ll=new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if(board[i][j]==1){
+                    ll.add(j+1);
+                }
+                // System.out.print((board[i][j] == 1 ? "Q " : "- "));
             }
-            board.add(temp);
         }
-
-        ArrayList<ArrayList<ArrayList<Integer>>> ans = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> temp = new ArrayList<>();
-        func(board, ans, temp, 0);
-        ArrayList<ArrayList<Integer>> finalans = new ArrayList<>();
-        for (ArrayList<ArrayList<Integer>> solution : ans) {
-            Collections.sort(solution, Comparator.comparingInt(o -> o.get(0)));
-            ArrayList<Integer> sortedCols = new ArrayList<>();
-            for (ArrayList<Integer> pos : solution) {
-                sortedCols.add(pos.get(1)+1);
-            }
-            finalans.add(sortedCols);
-        }
-        return finalans;
+        list.add(ll);
     }
 }
