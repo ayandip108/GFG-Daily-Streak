@@ -13,7 +13,6 @@ public class Main {
 
         while (t-- > 0) {
             // taking total number of elements
-            int k = Integer.parseInt(br.readLine());
             String line = br.readLine();
             String[] tokens = line.split(" ");
 
@@ -28,41 +27,35 @@ public class Main {
             int[] arr = new int[array.size()];
             int idx = 0;
             for (int i : array) arr[idx++] = i;
-            ArrayList<Integer> res = new Solution().max_of_subarrays(k, arr);
+            int k = Integer.parseInt(br.readLine());
+            ArrayList<Integer> res = new Solution().maxOfSubarrays(arr, k);
 
             // printing the elements of the ArrayList
             for (int i = 0; i < res.size(); i++) System.out.print(res.get(i) + " ");
             System.out.println();
+            System.out.println("~");
         }
     }
 }
 // } Driver Code Ends
 
 
-// User function template for JAVA
-
 class Solution {
-    // Function to find maximum of each subarray of size k.
-    public ArrayList<Integer> max_of_subarrays(int k, int arr[]) {
-        ArrayList<Integer> result = new ArrayList<>();
-        Deque<Integer> deque = new LinkedList<>(); 
-
-        for (int i = 0; i < arr.length; i++) {
-            if (!deque.isEmpty() && deque.peek() < i - k + 1) {
-                deque.poll();
+    public ArrayList<Integer> maxOfSubarrays(int arr[], int k) {
+        // code here
+        Deque<Integer> dq = new ArrayDeque<>();
+        int n = arr.length;
+        ArrayList<Integer> ans = new ArrayList<>();
+        for(int i =0; i < n; i++) {
+            while(dq.size() != 0 && arr[dq.getLast()] < arr[i]) {
+                dq.removeLast();
             }
-
-            while (!deque.isEmpty() && arr[deque.peekLast()] < arr[i]) {
-                deque.pollLast();
-            }
-
-            deque.offer(i);
-
-            if (i >= k - 1) {
-                result.add(arr[deque.peek()]);
+            dq.addLast(i);
+            if(i - dq.getFirst() == k) dq.removeFirst();
+            if(i >= k -1) {
+                ans.add(arr[dq.getFirst()]);
             }
         }
-
-        return result;
+        return ans;
     }
 }
