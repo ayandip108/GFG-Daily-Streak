@@ -27,38 +27,46 @@ public class Main {
             for (int i : array) arr[idx++] = i;
 
             System.out.println(new Solution().minJumps(arr));
-            // System.out.println("~");
+            System.out.println("~");
         }
     }
 }
 
 // } Driver Code Ends
 
+
 class Solution {
     static int minJumps(int[] arr) {
-        if (arr.length <= 1) {
-            return 0;
-        }
-        if (arr[0] == 0) {
-            return -1;
-        }
-        int maxReach = arr[0];
-        int steps = arr[0];
-        int jumps = 1;
-        for (int i = 1; i < arr.length; i++) {
-            if (i == arr.length - 1) {
-                return jumps;
-            }
-            maxReach = Math.max(maxReach, i + arr[i]);
-            steps--;
-            if (steps == 0) {
+        int n = arr.length;
+
+        // If the array has only one element, no jump is needed
+        if (n <= 1) return 0;
+
+        // If the first element is 0, we can't move anywhere
+        if (arr[0] == 0) return -1;
+
+        // Initialize variables
+        int jumps = 1; // At least one jump is needed initially
+        int farthest = arr[0]; // Farthest we can reach
+        int currEnd = arr[0];  // Current jump's range
+
+        for (int i = 1; i < n; i++) {
+            // If we've reached the last index, return jumps
+            if (i == n - 1) return jumps;
+
+            // Update the farthest we can reach
+            farthest = Math.max(farthest, i + arr[i]);
+
+            // If we reach the end of the current jump range
+            if (i == currEnd) {
                 jumps++;
-                if (i >= maxReach) {
-                    return -1;
-                }
-                steps = maxReach - i;
+                currEnd = farthest;
+
+                // If the current range doesn't extend further, we can't proceed
+                if (currEnd <= i) return -1;
             }
         }
-        return -1;
+
+        return -1; // If we exit the loop without reaching the last index
     }
 }
