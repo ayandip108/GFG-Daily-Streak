@@ -20,42 +20,22 @@ class Geeks {
 // } Driver Code Ends
 
 
-// User function Template for Java
-
 class Solution {
-    
     static int matrixMultiplication(int arr[]) {
         // code here
-        int n = arr.length;
-        int table[][] = new int[n][n];
-
-        // diagonals sohuld be zero!! 
-        // at diagonals, i == j, that is matrix can't be formed for i==j, 
-        // as we need at least 2 elements of the array to form the matrix. 
-        for( int i = 0; i< n; i++){
-            for( int j = 0; j<n; j++){
-                if( i == j) table[i][j] = 0;   
-            }
-        }
-        
-        // here since the smallest problem will be when the matrix size is smallest,
-        // we start from (i = n-1‚ j = n), where we only get 1 matrix
-         for( int i = n-1; i>=1; i--){
-            for( int j = i+1; j<n; j++){
-                int ans = Integer.MAX_VALUE;
-
-                for( int k = i; k <= j-1; k++){
-                    int tempAns = table[i][k] + table[k+1][j] + (arr[i-1] * arr[k] * arr[j]);
-                    ans = Math.min(tempAns, ans);
+            int n=arr.length;
+        int dp[][]=new int[n][n];
+        for(int i=0;i<n;i++)dp[i][i]=0;
+        for(int len=2;len<n;len++){
+            for(int i=1;i<n-len+1;i++){
+                int j=i+len-1;
+                dp[i][j]=Integer.MAX_VALUE;
+                for(int k=i;k<j;k++){
+                    int cost=dp[i][k]+dp[k+1][j]+arr[i-1]*arr[j]*arr[k];
+                    dp[i][j]=Math.min(dp[i][j],cost);
                 }
-                
-                table[i][j] = ans;
             }
         }
-        
-        // we have our biggest problems answer store at
-        // (i = 1, j = n-1)
-        // for clarity visualise i and j in the given array
-        return table[1][n-1];
+        return dp[1][n-1];
     }
 }
