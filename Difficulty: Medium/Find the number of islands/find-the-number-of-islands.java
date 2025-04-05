@@ -4,10 +4,10 @@ import java.util.*;
 class GFG {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int tc = scanner.nextInt(); // Number of test cases
+        int tc = scanner.nextInt();
         while (tc-- > 0) {
-            int n = scanner.nextInt(); // Number of rows
-            int m = scanner.nextInt(); // Number of columns
+            int n = scanner.nextInt();
+            int m = scanner.nextInt();
             char[][] grid = new char[n][m];
 
             // Read the grid input
@@ -17,8 +17,9 @@ class GFG {
                 }
             }
             Solution obj = new Solution();
-            int ans = obj.numIslands(grid);
+            int ans = obj.countIslands(grid);
             System.out.println(ans);
+            System.out.println("~");
         }
         scanner.close();
     }
@@ -28,42 +29,34 @@ class GFG {
 
 
 class Solution {
-    // Directions for 8 possible moves (N, NE, E, SE, S, SW, W, NW)
-    private final int[][] directions = {
-        {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, 
-        {1, 0}, {1, -1}, {0, -1}, {-1, -1}
-    };
-    public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0) return 0;
-        int n = grid.length;
-        int m = grid[0].length;
-        int count = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j] == '1') {
+ public int countIslands(char[][] grid) {
+        // Code here
+        int n=grid.length;
+        int m=grid[0].length;
+        int count=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]=='L'){
+                    dfs(grid,i,j,n,m);
                     count++;
-                    iterativeDFS(grid, i, j);
                 }
             }
         }
         return count;
+        
     }
-    private void iterativeDFS(char[][] grid, int startX, int startY) {
-        Stack<int[]> stack = new Stack<>();
-        stack.push(new int[]{startX, startY});
-        grid[startX][startY] = '0';
-        while (!stack.isEmpty()) {
-            int[] cell = stack.pop();
-            int x = cell[0];
-            int y = cell[1];
-            for (int[] direction : directions) {
-                int newX = x + direction[0];
-                int newY = y + direction[1];
-                if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid[0].length && grid[newX][newY] == '1') {
-                    stack.push(new int[]{newX, newY});
-                    grid[newX][newY] = '0';
+    public static void dfs(char[][] grid,int i,int j,int n,int m){
+         
+        grid[i][j]='K';
+        for(int r=-1;r<=1;r++){
+            for(int c=-1;c<=1;c++){
+                int nr=i+r;
+                int nc=j+c;
+                if(nr>=0 && nr<n && nc<m && nc>=0 && grid[nr][nc]=='L'){
+                   dfs(grid,nr,nc,n,m);
                 }
             }
         }
+        
     }
 }
