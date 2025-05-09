@@ -21,7 +21,7 @@ class GfG {
 
 
 
- class Solution {
+class Solution {
     // Function to find the largest number after k swaps.
     static String maxNum;
 
