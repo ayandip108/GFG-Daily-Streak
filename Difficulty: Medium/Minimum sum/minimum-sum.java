@@ -1,74 +1,65 @@
-//{ Driver Code Starts
-// Initial Template for Java
-
-import java.io.*;
-import java.lang.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String args[]) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int t = Integer.parseInt(br.readLine());
-
-        while (t-- > 0) {
-            String arr[] = br.readLine().split(" ");
-            int a[] = new int[arr.length];
-
-            for (int i = 0; i < arr.length; i++) {
-                a[i] = Integer.parseInt(arr[i]);
-            }
-            Solution obj = new Solution();
-            int f = 0;
-            String A = obj.minSum(a);
-            System.out.println(A);
-            System.out.println("~");
-        }
-    }
-}
-// } Driver Code Ends
-
-
-// User function Template for Java
-
 class Solution {
-    String minSum(int[] arr) {
-        Arrays.sort(arr);
-        StringBuilder num1 = new StringBuilder();
-        StringBuilder num2 = new StringBuilder();
-        boolean first = true;
-        for(int i:arr){
-            if(i==0) continue;
-            if(first){
-                num1.append(i+"");
-            }
-            else num2.append(i+"");
-            first = !first;
-        }
-        return solve(num1,num2);
-    }
-    static String solve(StringBuilder num1,StringBuilder num2){
+    public static String getSum(ArrayList<Integer> num1, ArrayList<Integer> num2) {
+        int i = num1.size()-1;
+        int j = num2.size()-1;
         StringBuilder ans = new StringBuilder();
-        int carry = 0,n1 = num1.length()-1,n2 = num2.length()-1;
-        while(n1>=0 && n2>=0){
-            int e = (num1.charAt(n1)-'0')+(num2.charAt(n2)-'0')+carry;
-            ans.append((e%10)+"");
-            carry = e/10;
-            n1--;
-            n2--;
+
+        int sum, carry = 0;
+        while((i >= 0) && (j >= 0)) {
+            sum = num1.get(i--) + num2.get(j--) + carry;
+            if(sum > 9) {
+                carry = 1;
+                sum -= 10;
+            } else {
+                carry = 0;
+            }
+            ans.append(sum);
         }
-        while(n1>=0){
-            int e = (num1.charAt(n1)-'0')+carry;
-            ans.append((e%10)+"");
-            carry = e/10;
-            n1--;
+
+        if(i == 0) {
+            sum = num1.get(0) + carry;
+            if(sum > 9) {
+                carry = 1;
+                sum -= 10;
+            } else {
+                carry = 0;
+            }
+            ans.append(sum);
         }
-        while(n2>=0){
-            int e = (num2.charAt(n2)-'0')+carry;
-            ans.append((e%10)+"");
-            carry = e/10;
-            n2--;
+
+        if(j == 0) {
+            sum = num2.get(0) + carry;
+            if(sum > 9) {
+                carry = 1;
+                sum -= 10;
+            } else {
+                carry = 0;
+            }
+            ans.append(sum);
         }
-        if(carry>=1) ans.append(1+"");
-        return ans.reverse().toString();
+
+        if(carry > 0) ans.append(carry);
+
+        ans.reverse();
+        return ans.toString();
+    }
+    
+    public String minSum(int[] a) {
+        int freq[] = new int[10];
+        for(int digit : a) freq[digit]++;
+
+        ArrayList<Integer> num1 = new ArrayList<>();
+        ArrayList<Integer> num2 = new ArrayList<>();
+        boolean flag = true;
+
+        for(int i=1; i<10; i++) {
+            while(freq[i]-- > 0) {
+                if(flag) num1.add(i);
+                else num2.add(i);
+                flag = !flag;
+            }
+        }
+
+        return getSum(num1, num2);        
     }
 }
