@@ -1,74 +1,49 @@
-//{ Driver Code Starts
-import java.io.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String args[]) throws IOException {
-        BufferedReader read =
-            new BufferedReader(new InputStreamReader(System.in));
-        int t = Integer.parseInt(read.readLine());
-        while (t-- > 0) {
-            
-            String St[] = read.readLine().split(" ");
-            
-            int N = Integer.parseInt(St[0]);
-            int K = Integer.parseInt(St[1]);
-            
-            String S[] = read.readLine().split(" ");
-            
-            int[] arr = new int[N];
-            
-            for(int i=0 ; i<N ; i++)
-                arr[i] = Integer.parseInt(S[i]);
-
-            Solution ob = new Solution();
-            System.out.println(ob.splitArray(arr,N,K));
-        
-System.out.println("~");
-}
-    }
-}
-// } Driver Code Ends
-
-
 class Solution {
-    static int numberOfSubar(int []a, int maxSumInASingleAr){
-        int num = 1;
-        int s = 0;
-        for(int i=0;i<a.length;i++){
-            if(a[i]+s <= maxSumInASingleAr){
-                s+=a[i];
-            }else{
-                num++;
-                s = a[i];
-            }
-        }
-        return num;
-    }
-    
-    static int splitArray(int[] arr , int N, int K) {
+    public int splitArray(int[] arr, int k) {
         // code here
-        // srch space = max -> sum
-        
+        int n = arr.length;
         int sum = 0;
         int max = Integer.MIN_VALUE;
-        
-        for(int i: arr){
-            sum += i;
-            max = Math.max(max, i);
+        for(int i=0; i<n; i++){
+            sum+=arr[i];
+            max = Math.max(max, arr[i]);
         }
         
-        int low = max;
-        int high = sum;
-        
+        int ans = sum;
+
+        int high = sum;  // if k=0, then the maximized minimum sum = sum of array
+        int low = max;  // minimum sum will be maximum element of the array.
+
+ 
+
+// Applying Binary Search
         while(low<=high){
-            int mid = (low+high)/2;
-            if(numberOfSubar(arr,mid)<=K){
+            int mid = low+(high-low)/2;
+            if(isPossible(arr, k, mid)){
+                ans = mid;
                 high = mid-1;
             }
-            else
+            else{
                 low = mid+1;
+            }
         }
-        return low;
+        return ans;
     }
-};
+    boolean isPossible(int[] arr, int k, int mid){
+        int count = 1;
+        int n = arr.length;
+        int sum = 0;
+        
+        for(int i=0; i<n; i++){
+            sum+=arr[i];
+            if(sum>mid){
+                sum = arr[i];
+                count++;
+            }
+        }
+        if(count<=k){
+            return true;
+        }
+        return false;
+    }
+}
