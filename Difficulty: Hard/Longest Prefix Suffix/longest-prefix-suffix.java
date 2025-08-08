@@ -1,48 +1,24 @@
-//{ Driver Code Starts
-// Initial Template for Java
-
-import java.io.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String args[]) throws IOException {
-        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-        int t = Integer.parseInt(read.readLine());
-        while (t-- > 0) {
-
-            String s = read.readLine();
-            Solution ob = new Solution();
-            System.out.println(ob.lps(s));
-        }
-    }
-}
-// } Driver Code Ends
-
-
-// User function Template for Java
-
 class Solution {
-    int lps(String str) {
-        int n = str.length();
-        int[] lps = new int[n];
-        lps[0] = 0;
-        
-        int i = 1, len = 0;
-        while(i < n){
-            if(str.charAt(i) == str.charAt(len)){
-                len++;
-                lps[i] = len;
-                i++;
+    int getLPSLength(String s) {
+        // code here
+        int n=s.length();
+        int p=0;
+        int su=1;
+        int count=0;
+        int pos=1;
+        while(p<n && su<n){
+            if(s.charAt(p)==s.charAt(su)){
+                p++;
+                su++;
+                count++;
             }
             else{
-                if(len != 0)
-                    len = lps[len-1];
-                else{
-                    lps[i] = 0;
-                    i++;
-                }
+                p=0;
+                count=0;
+                pos++;
+                su=pos;
             }
         }
-        return lps[n-1];
+        return count;
     }
-}
+} 
