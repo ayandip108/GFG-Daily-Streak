@@ -1,78 +1,52 @@
-//{ Driver Code Starts
-// Initial Template for Java
-
-import java.io.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine().trim());
-
-        while (tc-- > 0) {
-
-            String[] str = br.readLine().trim().split(" ");
-            int[] a = new int[str.length];
-            for (int i = 0; i < str.length; i++) {
-                a[i] = Integer.parseInt(str[i]);
-            }
-            String[] nk = br.readLine().trim().split(" ");
-            int k = Integer.parseInt(nk[0]);
-            Solution sln = new Solution();
-            int ans = sln.findPages(a, k);
-
-            System.out.println(ans);
-            System.out.println("~");
-        }
-    }
-}
-// } Driver Code Ends
-
-
-
-//Back-end complete function Template for Java
-
 class Solution {
-     public static int countStudent(int []arr,int pages){
-        int n = arr.length;
-        int student=1;
-        long studentPages=0;
-        for(int i =0;i<n;i++){
-            if(studentPages+arr[i]<=pages){
-                studentPages+=arr[i];
-            }else{
-                student++;
-                studentPages=arr[i];
-            }
-        }
-        return student;
-    }
     public static int findPages(int[] arr, int k) {
-        int n =arr.length;
-         if(k>n){
-            return -1;
-        }
-        int low = arr[0];  
-
-for (int i = 1; i < arr.length; i++) {
-    if (arr[i] > low) {
-        low = arr[i];  
-    }
-}
-        int high=0;
-        for(int  i =0;i<n;i++){
-            high+=arr[i];
-
-        }
-        while(low<=high){
-            int mid=(low+high)/2;
-            if(countStudent(arr, mid)>k){
-                low=mid+1;
-            }else{
-                high=mid-1;
-            }
-        }
-        return low;
         // code here
+        // students greater than books
+        if(k > arr.length) return -1;
+        int start = 0, end = 0;
+        
+        // all books can go to one student (end)
+        // at least one student will get the maximum number of pages (start)
+        for(int i : arr){
+            end += i;
+            if(i > start) start = i;
+        }
+        
+        // classic binary search
+        while(start <= end){
+            int mid = start + (end-start)/2;
+            
+            // since we want want the minimum difference 
+            if(canDo(arr, mid, k)) end = mid-1;
+            
+            // can't allocate so we try with big number
+            else start = mid+1;
+        }
+        // at last "start" will contain the answer
+        return start;
+    }
+    private static boolean canDo(int[] arr, int mid, int k){
+        // at least one student will get the book
+        int student = 1, currentSum = 0;
+        
+        for(int i : arr){
+            // chosen number is smaller than array element
+            // then it violets rule 1
+            if(i > mid) return false;
+            
+            // when sum went greater than our chosen number (mid)
+            if(currentSum + i > mid){
+                // incrementing student
+                student++;
+                // resetting the counter
+                currentSum = i;
+                
+                // when our counter went greater than available students
+                if(student > k) return false;
+            }
+            // else keep adding pages
+            else currentSum += i;
+        }
+        return true;
     }
 }
