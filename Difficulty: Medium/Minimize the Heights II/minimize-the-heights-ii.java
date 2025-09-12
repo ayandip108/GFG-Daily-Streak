@@ -1,67 +1,23 @@
-//{ Driver Code Starts
-import java.io.*;
-import java.util.*;
+class Solution {
+    public int getMinDiff(int[] arr, int k) {
+        // code here
+        
+    int n = arr.length;
+    Arrays.sort(arr);
 
-public class Main {
+    int ans = arr[n - 1] - arr[0];
+    int smallest = arr[0] + k;
+    int largest = arr[n - 1] - k;
 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine().trim());
-        while (tc-- > 0) {
-            String[] inputLine;
-            inputLine = br.readLine().trim().split(" ");
-            int k = Integer.parseInt(inputLine[0]);
+    for (int i = 0; i < n - 1; i++) {
+        int minVal = Math.min(smallest, arr[i + 1] - k);
+        int maxVal = Math.max(largest, arr[i] + k);
 
-            // Ensure input is read correctly
-            inputLine = br.readLine().trim().split(" ");
-            if (inputLine == null || inputLine.length == 0) {
-                System.out.println("Invalid input");
-                continue;
-            }
+        if (minVal < 0) continue;
 
-            int[] arr = new int[inputLine.length];
-            for (int i = 0; i < inputLine.length; i++) {
-                arr[i] = Integer.parseInt(inputLine[i]);
-            }
-
-            int ans = new Solution().getMinDiff(arr, k);
-            System.out.println(ans);
-        }
+        ans = Math.min(ans, maxVal - minVal);
     }
+    return ans;
 }
 
-// } Driver Code Ends
-
-
-// User function Template for Java
-
-class Solution {
-    int getMinDiff(int[] arr, int k) {
-        int n = arr.length;
-
-        if (n == 1) return 0; // If there's only one tower, no difference to minimize.
-
-        // Step 1: Sort the array
-        Arrays.sort(arr);
-
-        // Step 2: Calculate the initial difference between the largest and smallest
-        int maxDiff = arr[n - 1] - arr[0];
-
-        // Step 3: Initial potential smallest and largest after modification
-        int smallest = arr[0] + k;
-        int largest = arr[n - 1] - k;
-
-        // Step 4: Iterate through the array to find the minimum possible difference
-        for (int i = 0; i < n - 1; i++) {
-            int minHeight = Math.min(smallest, arr[i + 1] - k);
-            int maxHeight = Math.max(largest, arr[i] + k);
-
-            if (minHeight < 0) continue; // Skip if the modified height becomes negative
-
-            // Update the minimum difference
-            maxDiff = Math.min(maxDiff, maxHeight - minHeight);
-        }
-
-        return maxDiff;
-    }
 }
