@@ -1,27 +1,22 @@
 class Solution {
-    public ArrayList<Integer> nextLargerElement(int[] arr) {
-        int n = arr.length;
-        ArrayList<Integer> res = new ArrayList<>();
-        Stack<Integer> st = new Stack<>();
-        int[] temp = new int[n];
-
-        for (int i = 2 * n - 1; i >= 0; i--) {
-            int num = arr[i % n];
-
-            while (!st.isEmpty() && st.peek() <= num) {
-                st.pop();
+    public ArrayList<Integer> nextGreater(int[] arr) {
+        int n=arr.length;
+        ArrayList<Integer> result =new ArrayList<>(Collections.nCopies(n, -1));
+        Stack<Integer>stack=new Stack<>();
+        
+        for(int i=2*n-1; i>=0; i--){
+            int idx= i % n;
+            while (!stack.isEmpty() && arr[stack.peek()] <= arr[idx]){
+                
+                stack.pop();
             }
-
-            if (i < n) {
-                temp[i] = st.isEmpty() ? -1 : st.peek();
+            if(!stack.isEmpty()) {
+                result.set(idx, arr[stack.peek()]);
             }
-
-            st.push(num);
+            stack.push(idx);
         }
-        for (int val : temp) {
-            res.add(val);
-        }
-
-        return res;
+        return result;
+        // code here
+        
     }
 }
