@@ -1,0 +1,41 @@
+/*
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    private int ans = -1;
+    private int nodeCnt = 0;
+    private int targetPos = 0;
+    public int findMedian(Node root) {
+        // Code here
+        inorder(root, "countNodes");
+        targetPos = nodeCnt % 2 == 0 ? nodeCnt/2 : (nodeCnt+1)/2;
+        inorder(root, "logic");
+        return ans;
+    }
+    private void inorder(Node root, String type){
+        if(root == null) return;
+        inorder(root.left, type);
+        if(type.equals("countNodes")){
+            nodeCnt++;
+        }
+        if(type.equals("logic")){
+            targetPos--;
+            if(targetPos == 0){
+                ans = root.data;
+                return;
+            }
+        }
+        inorder(root.right, type);
+    }
+}
