@@ -1,20 +1,32 @@
 class Solution {
-    int countSubstr(String s, int k) {
-        return countAtMost(s,k) - countAtMost(s,k-1);
-    }
-    int countAtMost(String s, int k){
-        int l=0,count=0;
-        HashMap<Character,Integer>map = new HashMap<>();
-        for(int r=0; r<s.length(); r++){
-            char ch = s.charAt(r);
-            map.put(ch,map.getOrDefault(ch,0)+1);
-            while(map.size() > k){
-                map.put(s.charAt(l),map.get(s.charAt(l))-1);
-                map.remove(s.charAt(l),0);
-                l++;
-            }
-            count += (r-l+1);
+    private int atMostK(String s, int k){
+        char[] str = s.toCharArray();
+         int i =0; 
+         int j =0;
+        int[] hash = new int[26];
+        int distinctCount=0;
+        int ans = 0;
+        
+        while(j<str.length){
+            
+            hash[str[j]-'a']++;
+            
+            if(hash[str[j] - 'a'] == 1)distinctCount++; // seeing for the first time
+            
+           while(distinctCount > k){
+               hash[str[i] - 'a']--;
+               if(hash[str[i] - 'a'] == 0){
+                 distinctCount--;
+               }
+               i++;
+           }
+           ans+=(j-i+1);
+           j++;
         }
-        return count;
+        return ans;
+        
+    }
+    public int countSubstr(String s, int k) {
+          return atMostK(s,k) -atMostK(s,k-1);
     }
 }
