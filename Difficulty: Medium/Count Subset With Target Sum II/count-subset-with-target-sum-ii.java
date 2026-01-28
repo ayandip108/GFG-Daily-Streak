@@ -1,24 +1,61 @@
 class Solution {
-    private int f(int ind, int target, int[] arr, Map<List<Integer>, Integer> map){
-        if(target == 0)return 1;
-        if(target<0 || ind>=arr.length)return 0;
+    
+    void genSubsets(int idx, int sum, int arr[], Map<Integer, Integer> map){
         
-        // if(dp[ind][target] != -1)return dp[ind][target];
-        if(map.containsKey(Arrays.asList(ind, target)))return map.get(Arrays.asList(ind, target));
+        if(idx == arr.length){
+            map.put(sum, map.getOrDefault(sum , 0) + 1);
+            return;
+        } 
         
-        int take = f(ind+1, target-arr[ind], arr, map);
-        int notTake = f(ind+1, target, arr, map);
+        // Include in our subset:
+        genSubsets(idx+1, sum+arr[idx], arr, map);
         
-        int ans = take + notTake;
-        map.put(Arrays.asList(ind, target), ans);
-        return ans;
+        // Not Include in our subset:
+        genSubsets(idx+1, sum, arr, map);
+        
+        
     }
     public int countSubset(int[] arr, int k) {
-        long sum = Arrays.stream(arr).sum();
-        if(k>sum)return 0;
-        Arrays.sort(arr);
+        
         int n = arr.length;
-        Map<List<Integer>, Integer> map = new HashMap<>();
-        return f(0, k, arr, map);
+        int mid = n/2;
+        
+       int left[] = new int[mid];
+       int right[] = new int[n-mid];
+       
+       
+       for(int i=0; i<mid; i++){
+           left[i] = arr[i];
+       }
+       
+       int j = 0;
+       for(int i=mid; i<n; i++){
+           right[j++] = arr[i];
+       }
+       
+       Map<Integer, Integer> leftFreq = new HashMap<>();
+       Map<Integer, Integer> rightFreq = new HashMap<>();
+       
+       genSubsets(0, 0, left, leftFreq);
+       genSubsets(0, 0, right, rightFreq);
+       
+       
+       int ans = 0;
+       
+       for(Map.Entry<Integer, Integer> mp: leftFreq.entrySet()){
+           
+           int leftSum = mp.getKey();
+           int leftF = mp.getValue();
+           
+           if(rightFreq.containsKey(k-leftSum)){
+               ans += leftF*rightFreq.get(k-leftSum);
+           }
+       }
+       
+       return ans;
+       
+      
+       
+       
     }
 }
