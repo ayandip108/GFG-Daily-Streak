@@ -1,39 +1,40 @@
 class Solution {
     public int maxCircularSum(int arr[]) {
-        int n = arr.length;
 
-        // Step 1: Standard Kadane’s algorithm to find max subarray sum
-        int max_kadane = kadane(arr);
+ int globalMax=arr[0];
+ int golbalMin=arr[0];
+ int currMin=0;
+ int currMax=0;
+ int n=arr.length;
+ int totalSum=0;
+ for(int i=0;i<n;i++)
+ {
+     currMax+=arr[i];
+     totalSum+=arr[i];
+     if(currMax<0)
+     {
+         currMax=0;
+         globalMax=Math.max(arr[i],globalMax);
 
-        // Step 2: Total sum of the array
-        int total_sum = 0;
-        for (int i = 0; i < n; i++) {
-            total_sum += arr[i];
-            arr[i] = -arr[i]; // Invert the elements to find min subarray sum
-        }
-
-        // Step 3: Find min subarray sum using Kadane on inverted array
-        int max_inverse_kadane = kadane(arr); // Actually gives -min subarray sum
-        int max_circular = total_sum + max_inverse_kadane;
-
-        // Step 4: Handle case when all numbers are negative
-        if (max_circular == 0)
-            return max_kadane;
-
-        // Step 5: Return the maximum of two results
-        return Math.max(max_kadane, max_circular);
-    }
-
-    // Standard Kadane’s algorithm to find max subarray sum
-    private int kadane(int[] arr) {
-        int max_so_far = arr[0];
-        int current_max = arr[0];
-
-        for (int i = 1; i < arr.length; i++) {
-            current_max = Math.max(arr[i], current_max + arr[i]);
-            max_so_far = Math.max(max_so_far, current_max);
-        }
-
-        return max_so_far;
+     }
+     else{
+        globalMax=Math.max(currMax,globalMax);
+     }
+     
+     currMin+=arr[i];
+     if(currMin>0)
+     {
+         currMin=0;
+     }
+     else{
+        golbalMin=Math.min(currMin,golbalMin);
+     }
+     
+ }
+ if(globalMax<0)
+ return globalMax;
+ 
+ return Math.max(totalSum-golbalMin,globalMax);
+ 
     }
 }
