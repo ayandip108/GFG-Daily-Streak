@@ -1,19 +1,15 @@
 class Solution {
     public int getLastMoment(int n, int left[], int right[]) {
-        // code here
-        int m=0;
-        for(int i=0; i<left.length; i++){
-            int time=left[i];
-            if(time>m){
-                m=time;
-            }
+      int maxLeft = 0;
+        for (int pos : left) {
+            maxLeft = Math.max(maxLeft, pos);
         }
-        for (int i=0; i<right.length; i++){
-            int time = n-right[i];
-            if(time>m){
-                m = time;
-            }
+
+        int maxRight = 0;
+        for (int pos : right) {
+            maxRight = Math.max(maxRight, n - pos);
         }
-        return m;
+
+        return Math.max(maxLeft, maxRight);
     }
 }
