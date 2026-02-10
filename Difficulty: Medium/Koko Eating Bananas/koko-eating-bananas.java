@@ -1,35 +1,37 @@
 class Solution {
     public int kokoEat(int[] arr, int k) {
+        int low=1;
         
-        int maxi=0;
-        for(int i:arr) maxi=Math.max(i,maxi);
-        
-        int low=1,high=maxi,res=Integer.MAX_VALUE;
-        
+        int high = maxValue(arr);
         while(low<=high){
-            int mid=low+(high-low)/2;
-           
-            if(isPossible(mid,arr,k)){
-                res=Math.min(res,mid);
+            int mid = (low+high)/2;
+            if(mid==0){
+                low=mid+1;
+                continue;
+            }
+            int totalHrs = func(arr, mid);
+            if(totalHrs<=k){
                 high=mid-1;
             }else{
                 low=mid+1;
             }
         }
-        
-        return res==Integer.MAX_VALUE ? maxi :res;
+        return low;
     }
-    private boolean isPossible(int start,int[] arr,int k){
-        int count=0;
-        
-        for(int i:arr){
-            if(i%start!=0){
-                count+=(i/start)+1;
-            }else{
-                count+=(i/start);
-            }
-            if(count>k) return false;
+    
+    public int func(int[] arr, int mid){
+        int hours = 0;
+        for(int i=0;i<arr.length;i++){
+            hours += Math.ceil((double)arr[i]/(double)mid);
         }
-        return true;
+        return hours;
+    }
+    
+    public int maxValue(int[] arr){
+        int max=Integer.MIN_VALUE;
+        for(int i=0;i<arr.length;i++){
+            if(arr[i]>max) max=arr[i];
+        }
+        return max;
     }
 }
