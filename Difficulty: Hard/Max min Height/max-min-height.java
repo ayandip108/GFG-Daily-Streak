@@ -1,53 +1,56 @@
 class Solution {
     public int maxMinHeight(int[] arr, int k, int w) {
-        // code here
-         int n = arr.length;
-        int low = getMin(arr);
-        int high = low + k;
-        int answer = low;
-
+        int n = arr.length;
+        
+        int low = Integer.MAX_VALUE;
+        int high = Integer.MIN_VALUE;
+        
+        for (int num : arr) {
+            low = Math.min(low, num);
+            high = Math.max(high, num);
+        }
+        
+        high = high + k; // maximum possible height
+        
+        int ans = low;
+        
         while (low <= high) {
             int mid = low + (high - low) / 2;
-
-            if (isPossible(arr, k, w, mid)) {
-                answer = mid;
-                low = mid + 1;
+            
+            if (canAchieve(arr, n, k, w, mid)) {
+                ans = mid;
+                low = mid + 1;   // try higher minimum
             } else {
                 high = mid - 1;
             }
         }
-
-        return answer;
+        
+        return ans;
     }
-
-    private boolean isPossible(int[] arr, int k, int w, int targetHeight) {
-        int n = arr.length;
-        int[] diff = new int[n + w + 1];
-        long totalUsed = 0;
-        long added = 0;
-
+    
+    private boolean canAchieve(int[] arr, int n, int k, int w, int target) {
+        long[] diff = new long[n + 1];
+        long operations = 0;
+        long currentWater = 0;
+        
         for (int i = 0; i < n; i++) {
-            added += diff[i];
-            int currentHeight = arr[i] + (int)added;
-
-            if (currentHeight < targetHeight) {
-                int need = targetHeight - currentHeight;
-                totalUsed += need;
-                if (totalUsed > k) return false;
-                diff[i] += need;
-                diff[i + w] -= need;
-                added += need;
+            currentWater += diff[i];
+            
+            long currentHeight = arr[i] + currentWater;
+            
+            if (currentHeight < target) {
+                long need = target - currentHeight;
+                operations += need;
+                
+                if (operations > k) return false;
+                
+                currentWater += need;
+                
+                if (i + w < diff.length)
+                    diff[i + w] -= need;
             }
         }
-
-        return true;
-    }
-
-    private int getMin(int[] arr) {
-        int min = Integer.MAX_VALUE;
-        for (int num : arr) {
-            min = Math.min(min, num);
-        }
-        return min;
+        
+        return operations <= k;
     }
 }
