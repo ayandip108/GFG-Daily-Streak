@@ -1,46 +1,45 @@
+import java.util.*;
+
 class Solution {
     public boolean canFinish(int n, int[][] prerequisites) {
         
-        ArrayList<ArrayList<Integer>> adj = new ArrayList<ArrayList<Integer>>();
-        for(int i=0; i<n; i++) adj.add(new ArrayList<Integer>());
-        for(int[] pre: prerequisites) {
-            int v = pre[0];
-            int u = pre[1];
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+
+        int[] indegree = new int[n];
+
+        for (int[] pre : prerequisites) {
+            int course = pre[0];
+            int prereq = pre[1];
             
-            adj.get(u).add(v);
+            adj.get(prereq).add(course);
+            indegree[course]++;
         }
-        
-        if(findCycle(n, adj)) return false;
-        return true;
-    }
-    
-    private boolean findCycle(int n, ArrayList<ArrayList<Integer>> adj) {
-        
-        boolean[] vis = new boolean[n];
-        boolean[] path = new boolean[n];
-        
-        for(int i=0; i<n; i++) {
-            if(!vis[i]) {
-                if(dfs(i, adj, vis, path)) return true;
+
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
             }
         }
-        return false;
-    }
-    
-    private boolean dfs(
-        int node, ArrayList<ArrayList<Integer>> adj, boolean[] vis, boolean[] path
-    ) {
-        vis[node] = true;
-        path[node] = true;
+
+        int count = 0;
         
-        for(int adjNode: adj.get(node)) {
-            if(!vis[adjNode]) {
-                if(dfs(adjNode, adj, vis, path)) return true;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            count++;     
+            for (int neighbor : adj.get(curr)) {
+                indegree[neighbor]--;
+                
+                if (indegree[neighbor] == 0) {
+                    q.offer(neighbor);
+                }
             }
-            else if(path[adjNode]) return true;
         }
         
-        path[node] = false;
-        return false;
+        return count == n;
+        
     }
-}
+} 
